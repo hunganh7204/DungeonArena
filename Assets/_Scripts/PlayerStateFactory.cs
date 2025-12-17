@@ -19,6 +19,12 @@ public class PlayerStateFactory : MonoBehaviour
         return new PlayerMoveState(_context,this);
     }
 
+    public PlayerBaseState Attack()
+    {
+        return new PlayerAttackState(_context,this);
+    }
+
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

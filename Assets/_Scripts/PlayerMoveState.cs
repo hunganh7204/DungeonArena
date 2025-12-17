@@ -7,6 +7,7 @@ public class PlayerMoveState : PlayerBaseState
     public override void EnterState()
     {
         Debug.Log("Check move");
+        ctx.Animator.SetBool(ctx.IsMovingHash, true);
     }
 
     public override void UpdateState()
@@ -22,6 +23,10 @@ public class PlayerMoveState : PlayerBaseState
 
     public override void CheckSwitchState()
     {
+        if (ctx.IsAttackPressed)
+        {
+            ctx.SwitchState(factory.Attack());
+        }
         if (!ctx.IsMovementPressed)
         {
             ctx.SwitchState(factory.Idle());

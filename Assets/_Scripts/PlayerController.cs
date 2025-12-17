@@ -17,7 +17,25 @@ public class PlayerController : MonoBehaviour
     public bool IsMovementPressed { get; private set; }
     public Vector2 CurrentInputVector => _inputVector;
 
+    public bool IsAttackPressed { get; private set; }
+
     public CharacterController Controller { get; private set; }
+
+    [Header("Animation")]
+    public Animator Animator;
+
+    public int IsMovingHash { get; private set; }
+    public int AttackHash { get; private set; }
+
+
+    [Header("Combo Settings")]
+    public int ComboCounter = 0; //thu tu don danh
+    public float LastAttackTime = 0; //thoi diem don danh cuoi cung
+    public float ComboResetTime = 1.0f; //thoi gian reset combo khi dung danh
+    public float AttackCooldown = 0.8f;
+    private float _nextAttackTime = 0; 
+
+    public int ComboStepHash { get; private set; }
 
 
     private void Awake()
@@ -31,6 +49,20 @@ public class PlayerController : MonoBehaviour
 
         _inputActions.Gameplay.Move.performed += OnMoveInput;
         _inputActions.Gameplay.Move.canceled += OnMoveInput;
+
+        _inputActions.Gameplay.Attack.performed += ctx =>
+        {
+            if (Time.time >= _nextAttackTime)
+            {
+                IsAttackPressed = true;
+            }
+        };
+        _inputActions.Gameplay.Attack.canceled += ctx => IsAttackPressed = false;
+
+        IsMovingHash = Animator.StringToHash("isMoving");
+        AttackHash = Animator.StringToHash("Attack");
+        ComboStepHash = Animator.StringToHash("ComboStep");
+
     }
 
     private void OnMoveInput(InputAction.CallbackContext context)
@@ -73,5 +105,15 @@ public class PlayerController : MonoBehaviour
         }
 
         Controller.Move(Vector3.down*9.81f*Time.deltaTime); //trong luc
+    }
+
+    public void ResetAttackTrigger()
+    {
+        IsAttackPressed = false;
+    }
+
+    public void SetNextAttackTime()
+    {
+        _nextAttackTime = Time.time + AttackCooldown;
     }
 }
