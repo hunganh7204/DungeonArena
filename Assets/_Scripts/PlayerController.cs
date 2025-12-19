@@ -11,19 +11,15 @@ public class PlayerController : MonoBehaviour
 
     private PlayerBaseState _currentState;
     private PlayerStateFactory _states;
-
     private GameInput _inputActions;
     private Vector2 _inputVector; //luu gia tri input wasd
     public bool IsMovementPressed { get; private set; }
     public Vector2 CurrentInputVector => _inputVector;
-
     public bool IsAttackPressed { get; private set; }
-
     public CharacterController Controller { get; private set; }
 
     [Header("Animation")]
     public Animator Animator;
-
     public int IsMovingHash { get; private set; }
     public int AttackHash { get; private set; }
 
@@ -34,8 +30,13 @@ public class PlayerController : MonoBehaviour
     public float ComboResetTime = 1.0f; //thoi gian reset combo khi dung danh
     public float AttackCooldown = 0.8f;
     private float _nextAttackTime = 0; 
-
     public int ComboStepHash { get; private set; }
+
+    [Header("Combat Settings")]
+    public Transform AttackPoint; //diem tam cua don danh
+    public float AttackRadius = 1.5f; //ban kinh don danh
+    public float AttackDamage = 10;
+    public LayerMask EnemyLayer; //chi danh vao lop Enemy
 
 
     private void Awake()
@@ -115,5 +116,26 @@ public class PlayerController : MonoBehaviour
     public void SetNextAttackTime()
     {
         _nextAttackTime = Time.time + AttackCooldown;
+    }
+
+    public void AnimationTriggerAttack()
+    {
+        Collider[] hitEnemies = Physics.OverlapSphere(AttackPoint.position, AttackRadius, EnemyLayer); 
+
+        foreach(Collider enemy in hitEnemies)
+        {
+            if(enemy.TryGetComponent<IDamageable>(out IDamageable damageableTarget))
+            {
+                damageableTarget.TakeDamage(AttackDamage);
+            }
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (AttackPoint == null) return;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(AttackPoint.position, AttackRadius);
     }
 }
