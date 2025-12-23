@@ -38,6 +38,11 @@ public class PlayerController : MonoBehaviour
     public float AttackDamage = 10;
     public LayerMask EnemyLayer; //chi danh vao lop Enemy
 
+    [Header("Audio & VFX")]
+    public AudioClip SwordSwingSound;
+    public AudioClip HitSound;
+    public GameObject HitVFXPrefab;
+
 
     private void Awake()
     {
@@ -127,6 +132,14 @@ public class PlayerController : MonoBehaviour
             if(enemy.TryGetComponent<IDamageable>(out IDamageable damageableTarget))
             {
                 damageableTarget.TakeDamage(AttackDamage);
+
+                AudioManager.instance.PlaySFX(HitSound);
+
+                if(HitVFXPrefab != null)
+                {
+                    GameObject vfx = Instantiate(HitVFXPrefab, enemy.transform.position + Vector3.up, Quaternion.identity);
+                    Destroy(vfx, 1.0f);
+                }
             }
         }
     }

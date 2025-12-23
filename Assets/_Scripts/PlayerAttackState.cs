@@ -19,6 +19,8 @@ public class PlayerAttackState : PlayerBaseState
         ctx.ComboCounter++;//tang so dem combo
         ctx.SetNextAttackTime();
         Debug.Log(ctx.ComboCounter);
+
+        AudioManager.instance.PlaySFX(ctx.SwordSwingSound);
     }
 
     public override void UpdateState()
