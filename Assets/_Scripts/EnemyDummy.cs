@@ -25,6 +25,11 @@ public class EnemyDummy : MonoBehaviour,IDamageable
     {
         Debug.Log("Enemy has been slain");
         gameObject.SetActive(false);
+        if(GameManager.Instance != null)
+        {
+            GameManager.Instance.OnEnemyKilled();
+        }
+        Destroy(gameObject);
     }
 
     private System.Collections.IEnumerator FlashRed()

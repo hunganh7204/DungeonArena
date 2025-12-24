@@ -44,6 +44,16 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         OnDeath?.Invoke();
 
         GetComponent<PlayerController>().enabled = false;
+
+        if(GameManager.Instance != null)
+        {
+            GameManager.Instance.GameOver();
+        }
+    }
+
+    public void Heal(int amount)
+    {
+        _currentHealth += amount;
     }
 
 }

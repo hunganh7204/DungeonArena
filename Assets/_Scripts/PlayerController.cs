@@ -138,10 +138,18 @@ public class PlayerController : MonoBehaviour
                 if(HitVFXPrefab != null)
                 {
                     GameObject vfx = Instantiate(HitVFXPrefab, enemy.transform.position + Vector3.up, Quaternion.identity);
+                    StartCoroutine(HitStop());
                     Destroy(vfx, 1.0f);
                 }
             }
         }
+    }
+
+    private System.Collections.IEnumerator HitStop()
+    {
+        Time.timeScale = 0.1f;
+        yield return new WaitForSecondsRealtime(0.05f);
+        Time.timeScale = 1f;
     }
 
     private void OnDrawGizmos()
