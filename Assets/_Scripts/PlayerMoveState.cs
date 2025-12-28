@@ -27,9 +27,13 @@ public class PlayerMoveState : PlayerBaseState
         {
             ctx.SwitchState(factory.Attack());
         }
-        if (!ctx.IsMovementPressed)
+        else if (!ctx.IsMovementPressed)
         {
             ctx.SwitchState(factory.Idle());
+        }
+        else if (ctx.IsDashPressed)
+        {
+            ctx.SwitchState(factory.Dash());
         }
     }
 

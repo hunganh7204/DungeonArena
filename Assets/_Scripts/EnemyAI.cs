@@ -10,18 +10,19 @@ public class EnemyAI : MonoBehaviour
 
     private NavMeshAgent _agent;
     private Transform _playerTarget;
-    private Animator _animator;
     private PlayerHealth _playerHealth;
 
     [Header("Combat")]
-    public float attackRange = 1f;
+    public float attackRange = 2.5f;
     public float attackCooldown = 2.0f;
     public float damage = 10.0f;
     private float _lastAttackTime;
 
+    private Animator _animator;
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
+        _animator = GetComponent<Animator>();
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
        
         if (playerObj != null)
@@ -46,7 +47,11 @@ public class EnemyAI : MonoBehaviour
             _agent.ResetPath();
             return;
         }
-
+        if (_animator != null)
+        {
+            bool isMoving = _agent.velocity.sqrMagnitude > 0.1f;
+            _animator.SetBool("isMoving", isMoving);
+        }
         float distanceToPlayer = Vector3.Distance(transform.position, _playerTarget.position);
         if (distanceToPlayer <= ChaseRange)
         {
@@ -71,6 +76,7 @@ public class EnemyAI : MonoBehaviour
         _agent.SetDestination(_playerTarget.position);
         if(_agent.remainingDistance <= _agent.stoppingDistance)
         {
+
             FaceTarget();
         }
     }
@@ -95,9 +101,23 @@ public class EnemyAI : MonoBehaviour
     private void AttackPlayer()
     {
         Debug.Log("Enemy Attack");
-        if(_playerTarget.TryGetComponent<IDamageable>(out IDamageable targetHealth))
+
+        if(_animator != null)
         {
-            targetHealth.TakeDamage(damage);
+            _animator.SetTrigger("Attack");
         }
     }
+
+    public void DealDamageToPlayer()
+    {
+        float distance = Vector3.Distance(transform.position, _playerTarget.position);
+        if(distance <= _agent.stoppingDistance + 0.5f)
+        {
+            if (_playerTarget.TryGetComponent<IDamageable>(out IDamageable targetHealth))
+            {
+                targetHealth.TakeDamage(damage);
+            }
+        }
+    }
+
 }

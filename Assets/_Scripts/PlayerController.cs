@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 CurrentInputVector => _inputVector;
     public bool IsAttackPressed { get; private set; }
     public CharacterController Controller { get; private set; }
+    public bool IsDashPressed {  get; private set; }
 
     [Header("Animation")]
     public Animator Animator;
@@ -25,12 +26,16 @@ public class PlayerController : MonoBehaviour
 
 
     [Header("Combo Settings")]
+    //attack
     public int ComboCounter = 0; //thu tu don danh
     public float LastAttackTime = 0; //thoi diem don danh cuoi cung
     public float ComboResetTime = 1.0f; //thoi gian reset combo khi dung danh
     public float AttackCooldown = 0.8f;
     private float _nextAttackTime = 0; 
     public int ComboStepHash { get; private set; }
+    //dash
+    public float DashSpeed = 20f;
+    public float DashDuration = 0.2f;
 
     [Header("Combat Settings")]
     public Transform AttackPoint; //diem tam cua don danh
@@ -64,6 +69,9 @@ public class PlayerController : MonoBehaviour
             }
         };
         _inputActions.Gameplay.Attack.canceled += ctx => IsAttackPressed = false;
+
+        _inputActions.Gameplay.Dash.performed += ctx => IsDashPressed = true;
+        _inputActions.Gameplay.Dash.canceled += ctx => IsDashPressed = false;
 
         IsMovingHash = Animator.StringToHash("isMoving");
         AttackHash = Animator.StringToHash("Attack");

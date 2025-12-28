@@ -1,13 +1,17 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyDummy : MonoBehaviour,IDamageable
 {
     [SerializeField] float maxHealth = 30;
     private float currentHealth;
 
+    private Animator _animator;
+
     private void Start()
     {
         currentHealth = maxHealth;
+        _animator = GetComponent<Animator>();
     }
     public void TakeDamage(float amount)
     {
@@ -24,12 +28,19 @@ public class EnemyDummy : MonoBehaviour,IDamageable
     private void Die()
     {
         Debug.Log("Enemy has been slain");
-        gameObject.SetActive(false);
+        if (GetComponent<NavMeshAgent>() != null) GetComponent<NavMeshAgent>().enabled = false;
+        if (GetComponent<EnemyAI>() != null) GetComponent<EnemyAI>().enabled = false;
+        if (GetComponent<Collider>() != null) GetComponent<Collider>().enabled = false;
+        
+        if(_animator != null)
+        {
+            _animator.SetTrigger("Die");
+        }
         if(GameManager.Instance != null)
         {
             GameManager.Instance.OnEnemyKilled();
         }
-        Destroy(gameObject);
+        Destroy(gameObject,2.0f);
     }
 
     private System.Collections.IEnumerator FlashRed()

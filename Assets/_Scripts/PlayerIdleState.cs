@@ -30,6 +30,10 @@ public class PlayerIdleState : PlayerBaseState
         {
             ctx.SwitchState(factory.Move());
         }
+        else if (ctx.IsDashPressed)
+        {
+            ctx.SwitchState(factory.Dash());
+        }
     }
 
 }

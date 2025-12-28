@@ -24,17 +24,9 @@ public class PlayerStateFactory : MonoBehaviour
         return new PlayerAttackState(_context,this);
     }
 
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public PlayerBaseState Dash()
     {
-        
+        return new PlayerDashState(_context,this);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
