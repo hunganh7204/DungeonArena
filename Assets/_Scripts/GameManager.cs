@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour
         if( _enemiesRemaining <= 0)
         {
             CurrentWave++;
-            Invoke(nameof(StartNextWave), 5f);
+            Invoke(nameof(StartNextWave), 4f);
         }
 
         if( CurrentWave % 5 == 0)

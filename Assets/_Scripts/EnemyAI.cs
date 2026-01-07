@@ -5,7 +5,7 @@ using UnityEngine.AI;
 public class EnemyAI : MonoBehaviour
 {
     [Header("Settings")]
-    public float ChaseRange = 10f; // tam nhin enemy
+    public float ChaseRange = 100f; // tam nhin enemy
     public float RotateSpeed = 5f;
 
     private NavMeshAgent _agent;
